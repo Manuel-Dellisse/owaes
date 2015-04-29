@@ -1,4 +1,6 @@
 <?
+	// Test
+
 	include "inc.default.php"; // should be included in EVERY file 
 	
 	$arFixed = array( 
