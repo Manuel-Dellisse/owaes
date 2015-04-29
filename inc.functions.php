@@ -311,8 +311,6 @@
 	}	 
 	
 	function cache($strURL, $strExt = NULL, $iHours = -1) {
-		return null;
-
 		if (is_null($strExt)) {
 			$arURL = explode("?", $strURL); 
 			$arURL = explode(".", $arURL[0]); 
