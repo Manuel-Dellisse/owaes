@@ -1,0 +1,5 @@
+#!/bin/sh
+# Shell script gaat een Python script uitvoeren
+# om PHP script update.php uit te voeren in de browser.
+
+python -m webbrowser -t "http://localhost/owaes/update.php"
