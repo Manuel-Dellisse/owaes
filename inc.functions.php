@@ -311,6 +311,8 @@
 	}	 
 	
 	function cache($strURL, $strExt = NULL, $iHours = -1) {
+		return null;
+
 		if (is_null($strExt)) {
 			$arURL = explode("?", $strURL); 
 			$arURL = explode(".", $arURL[0]); 
@@ -322,7 +324,7 @@
 			if (($iHours == -1) || (filemtime($strCache)>owaesTime()-(60-60*$iHours))) return $strCache; 
 		}
 		copy($strURL, $strCache);	
-		return null; 
+		return $strCache; 
 	}
 
 	function content($fn) {
