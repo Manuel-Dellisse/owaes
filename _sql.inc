@@ -89,7 +89,4 @@
 	(78, 'indicatoren.owaesadd', '5'),
 	(79, 'mail.smtp', 'FALSE');
 	</sql>
-	<sql name="addColumn-Test_tblMarketTypes" tag="1">
-		ALTER TABLE tblMarketTypes ADD Test VARCHAR(255) NULL;
-	</sql>
 </queries>
