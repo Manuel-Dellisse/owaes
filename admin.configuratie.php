@@ -104,7 +104,7 @@
 						</p>
 						<p>
 							<label for="txtPasswd">Password:</label><br/>
-							<input type="password" name="txtPasswd" id="txtPasswd" value="<? echo md5(settings("mail", "Password"); ?>"/>
+							<input type="password" name="txtPasswd" id="txtPasswd" value="<? echo md5(settings("mail", "Password")); ?>"/>
 						</p>
 					</fieldset>
 				</form>
