@@ -80,7 +80,7 @@
 						<legend>Mail</legend>
 						<p>
 							<label for="rbSMTP">SMTP</label>
-							<input type="radio" name="rbSMTP" id="rbSMTP" value="<? echo settings("mail", "smtp"); ?>" <? print(settings("mail", "smtp") ? "checked='checked'" : ""); ?>/>
+							<input type="radio" name="rbSMTP" id="rbSMTP" value="<? echo settings("mail", "smtp"); ?>" <? print((settings("mail", "smtp") == "TRUE") ? "checked='checked'" : ""); ?>/>
 						</p>
 						<p>
 							<label for="txtHost">Host:</label><br/>
@@ -88,7 +88,7 @@
 						</p>
 						<p>
 							<label for="rbAuth">Authentication</label>
-							<input type="radio" name="rbAuth" id="rbAuth" value="<? echo settings("mail", "SMTPAuth"); ?>" <? print(settings("mail", "SMTPAuth") ? "checked='checked'" : ""); ?>/>
+							<input type="radio" name="rbAuth" id="rbAuth" value="<? echo settings("mail", "SMTPAuth"); ?>" <? print((settings("mail", "SMTPAuth") == "TRUE") ? "checked='checked'" : ""); ?>/>
 						</p>
 						<p>
 							<label for="txtSecure">Secure:</label><br/>
