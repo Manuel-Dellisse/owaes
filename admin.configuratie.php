@@ -100,7 +100,7 @@
 						</p>
 						<p>
 							<label for="txtUsername">Username:</label><br/>
-							<input type="text" name="txtUsername" id="txtUsername" value="<? echo settings("mail", "Username" ?>"/>
+							<input type="text" name="txtUsername" id="txtUsername" value="<? echo settings("mail", "Username"); ?>"/>
 						</p>
 						<p>
 							<label for="txtPasswd">Password:</label><br/>
