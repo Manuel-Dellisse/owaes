@@ -25,7 +25,7 @@
 		$result = $dbPDO->exec($query["sql"]);
 
 		if ($result == 0) {
-			$error = "Query NOT successful executed!\nScript terminated!\nIMPORTANT: Some queries might not have been executed.";
+			$error = "<b>Script terminated: Query NOT successful executed!<br/>IMPORTANT: Some queries might not have been executed.";
 			die($error);
 		}
 
