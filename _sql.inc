@@ -92,6 +92,6 @@
 	<sql name="insert-smtpConfs_tblConfig" tag="1">
 		INSERT INTO `tblConfig` (`key`, `value`) VALUES
 	('mail.Host', NULL), ('mail.SMTPAuth', 'FALSE'), ('mail.SMTPSecure', 'ssl'),
-	('mail.Port', NULL), ('mail.Username', NULL) ('mail.Password', NULL);
+	('mail.Port', NULL), ('mail.Username', NULL), ('mail.Password', NULL);
 	</sql>
 </queries>
