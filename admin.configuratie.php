@@ -76,6 +76,37 @@
 							<input type="text" name="txtOverdracht" id="txtOverdracht" value="<? echo settings("credits", "name", "overdracht"); ?>"/>
 						</p>
 					</fieldset>
+					<fieldset>
+						<legend>Mail</legend>
+						<p>
+							<label for="rbSMTP">SMTP</label><br/>
+							<input type="radio" name="rbSMTP" id="rbSMTP" value="<? echo settings("mail", "smtp"); ?>"/>
+						</p>
+						<p>
+							<label for="txtHost">Host:</label><br/>
+							<input type="text" name="txtHost" id="txtHost" value="<? echo settings("mail", "Host"); ?>"/>
+						</p>
+						<p>
+							<label for="txtAuth">Authentication:</label><br/>
+							<input type="text" name="txtAuth" id="txtAuth" value="<? echo settings("mail", "SMTPAuth"); ?>"/>
+						</p>
+						<p>
+							<label for="txtSecure">Secure:</label><br/>
+							<input type="text" name="txtSecure" id="txtSecure" value="<? echo settings("mail", "SMTPSecure"); ?>"/>
+						</p>
+						<p>
+							<label for="txtPort">Port:</label><br/>
+							<input type="text" name="txtPort" id="txtPort" value="<? echo settings("mail", "Port"); ?>"/>
+						</p>
+						<p>
+							<label for="txtUsername">Username:</label><br/>
+							<input type="text" name="txtUsername" id="txtUsername" value="<? echo settings("mail", "Username" ?>"/>
+						</p>
+						<p>
+							<label for="txtPasswd">Password:</label><br/>
+							<input type="password" name="txtPasswd" id="txtPasswd" value="<? echo md5(settings("mail", "Password"); ?>"/>
+						</p>
+					</fieldset>
 				</form>
 			</div>
 		</div>
