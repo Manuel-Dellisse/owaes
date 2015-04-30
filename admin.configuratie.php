@@ -80,15 +80,15 @@
 						<legend>Mail</legend>
 						<p>
 							<label for="rbSMTP">SMTP</label><br/>
-							<input type="radio" name="rbSMTP" id="rbSMTP" value="<? echo settings("mail", "smtp"); ?>"/>
+							<input type="radio" name="rbSMTP" id="rbSMTP" value="<? echo eval(settings("mail", "smtp")); ?>"/>
 						</p>
 						<p>
 							<label for="txtHost">Host:</label><br/>
 							<input type="text" name="txtHost" id="txtHost" value="<? echo settings("mail", "Host"); ?>"/>
 						</p>
 						<p>
-							<label for="txtAuth">Authentication:</label><br/>
-							<input type="text" name="txtAuth" id="txtAuth" value="<? echo settings("mail", "SMTPAuth"); ?>"/>
+							<label for="rbAuth">Authentication:</label><br/>
+							<input type="radio" name="rbAuth" id="rbAuth" value="<? echo eval(settings("mail", "SMTPAuth")); ?>"/>
 						</p>
 						<p>
 							<label for="txtSecure">Secure:</label><br/>
