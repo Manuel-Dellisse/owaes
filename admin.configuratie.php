@@ -7,6 +7,25 @@
 
 	$oPage->addJS("script/admin.js");
 	$oPage->addCSS("style/admin.css");
+	
+	function encryptor($text) {
+		$key = pack("H*", "cf372282683d4802ee035e793218e2e4a8a8eb4f6a1d5675b6a6a289c860abde");
+		$key_size = strlen($key);
+
+		$iv_size = mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_CBC);
+		$iv = mcrypt_create_iv($iv_size, MCRYPT_RAND);
+
+		$block = mcrypt_get_block_size("rijndael_256", "cbc");
+		$pad = $block - (strlen($text) % $block);
+		$text .= str_repeat(chr($pad), $pad);
+
+		$cipherText = mcrypt_encrypt(MCRYPT_RIJNDAEL_256, $key, $text, MCRYPT_MODE_CBC, $iv);
+		$cipherText = $iv . $cipherText;
+
+		$encodeCipher = base64_encode($cipherText);
+
+		return $encodeCipher;
+	}
 
 	function prepareAndExecuteStmt($key, $val, $dbPDO) {
 		$query = "UPDATE `tblConfig` SET `value` = ? WHERE `key` LIKE ?";
@@ -48,8 +67,9 @@
 		}
 
 		prepareAndExecuteStmt("mail.smtp", $test, $dbPDO);
-		prepareAndExecuteStmt("mail.Host", $_POST["txtHost"], $dbPDO);
 
+		if (isset($_POST["txtHost"])) prepareAndExecuteStmt("mail.Host", $_POST["txtHost"], $dbPDO);
+		
 		$test = "FALSE";
 
 		if (isset($_POST["chkAuth"])) {
@@ -57,20 +77,21 @@
 		}
 
 		prepareAndExecuteStmt("mail.SMTPAuth", $test, $dbPDO);
-		prepareAndExecuteStmt("mail.SMTPSecure", $_POST["txtSecure"], $dbPDO);
-		prepareAndExecuteStmt("mail.Port", $_POST["txtPort"], $dbPDO);
-		prepareAndExecuteStmt("mail.Username", $_POST["txtUsername"], $dbPDO);
+
+		if (isset($_POST["txtSecure"])) prepareAndExecuteStmt("mail.SMTPSecure", $_POST["txtSecure"], $dbPDO);
+		if (isset($_POST["txtPort"])) prepareAndExecuteStmt("mail.Port", $_POST["txtPort"], $dbPDO);
+		if (isset($_POST["txtUsername"])) prepareAndExecuteStmt("mail.Username", $_POST["txtUsername"], $dbPDO);
 
 		$pwd = null;
 
-		if (!empty($_POST["txtPasswd"]) || $_POST["txtPasswd"] != md5("")) {
+		if (!empty($_POST["txtPasswd"])) {
 			$query = "SELECT `value` FROM `tblConfig` WHERE `key` LIKE 'mail.Password'";
 			$result = $dbPDO->query($query);
 			$pwd = $_POST["txtPasswd"];
 
 			foreach ($result as $p) {
 				if ($pwd != $p["value"]) {
-					$pwd = md5($pwd);
+					$pwd = encryptor($pwd);
 				}
 			}
 		}
@@ -85,7 +106,7 @@
 	<head>
 		<? echo $oPage->getHeader(); ?>
 	</head>
-	<body id="index"> 
+	<body id="index">
 		<? echo $oPage->startTabs(); ?>
 		<div class="body">
 			<div class="container">
