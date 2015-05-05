@@ -63,7 +63,7 @@
 
 		$pwd = null;
 
-		if ($_POST["txtPasswd"] != "" || md5($_POST["txtPasswd"]) != md5("") || $_POST["txtPasswd"] != md5("")) {
+		if (!empty($_POST["txtPasswd"]) || $_POST["txtPasswd"] != md5("")) {
 			$query = "SELECT `value` FROM `tblConfig` WHERE `key` LIKE 'mail.Password'";
 			$result = $dbPDO->query($query);
 			$pwd = $_POST["txtPasswd"];
