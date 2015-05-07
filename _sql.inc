@@ -99,6 +99,6 @@
 	('facebook.loginapp.id', NULL), ('facebook.loginapp.secret', NULL);
 	</sql>
 	<sql name="update-cronsIndicators_tblConfig" tag="3">
-		UPDATE `tblConfig` SET `value` = '24*3600' WHERE `key` LIKE 'crons.indicators';
+		UPDATE `tblConfig` SET `value` = '1*24*3600' WHERE `key` LIKE 'crons.indicators';
 	</sql>
 </queries>
