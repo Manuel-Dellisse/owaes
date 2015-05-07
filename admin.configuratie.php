@@ -59,48 +59,85 @@
 		$stmt->execute();
 	}
 
-	if (isset($_POST["btnOpslaan"])) {
-		$dbPDO = new PDO("mysql:host=" . $arConfig["database"]["host"] . ";dbname=" . $arConfig["database"]["name"], $arConfig["database"]["user"], $arConfig["database"]["password"]);
+	function issetAndNotEmpty($field) {
+		$test = false;
 
-		prepareAndExecuteStmt("startvalues.credits", $_POST["txtCredits"], $dbPDO);
-		prepareAndExecuteStmt("startvalues.physical", $_POST["txtPhysical"], $dbPDO);
-		prepareAndExecuteStmt("startvalues.social", $_POST["txtSocial"], $dbPDO);
-		prepareAndExecuteStmt("startvalues.mental", $_POST["txtMental"], $dbPDO);
-		prepareAndExecuteStmt("startvalues.emotional", $_POST["txtEmotional"], $dbPDO);
+		if (isset($field) && !empty($field)) {
+			$test = true;
+		}
+
+		return $test;
+	}
+
+	if (isset($_POST["btnOpslaan"])) {
+		/* Start waarden */
+		if (issetAndNotEmpty($_POST["txtTemplateFolder"])) prepareAndExecuteStmt("domain.templatefolder", $_POST["txtTemplateFolder"], $dbPDO);
 
 		$test = "FALSE";
+		if (isset($_POST["chkAlgemenevoorwaarden"])) $test = "TRUE";
 
-		if (isset($_POST["chkVisibility"])) {
-			$test = "TRUE";
-		}
+		prepareAndExecuteStmt("startvalues.algemenevoorwaarden", $test, $dbPDO);
+
+		$test = "FALSE";
+		if (isset($_POST["chkVisibility"])) $test = "TRUE";
 
 		prepareAndExecuteStmt("startvalues.visibility", $test, $dbPDO);
-		prepareAndExecuteStmt("date.timezone", $_POST["lstTimezone"], $dbPDO);
 
-		$coord = addressToCoordinates($_POST["txtLokatie"]);
+		if (isset($_POST["txtAnalytics"])) prepareAndExecuteStmt("analytics", $_POST["txtAnalytics"], $dbPDO);
 
-		prepareAndExecuteStmt("geo.latitude", $coord["latitude"], $dbPDO);
-		prepareAndExecuteStmt("geo.longitude", $coord["longitude"], $dbPDO);
-		prepareAndExecuteStmt("credits.max", $_POST["txtMax"], $dbPDO);
-		prepareAndExecuteStmt("credits.name.1", $_POST["txtEenheid"], $dbPDO);
-		prepareAndExecuteStmt("credits.name.x", $_POST["txtMeervoud"], $dbPDO);
-		prepareAndExecuteStmt("credits.name.overdracht", $_POST["txtOverdracht"], $dbPDO);
+		/* ------------- */
+
+		/* Debugging */
+		$test = "FALSE";
+		if (isset($_POST["chkShowwarnings"])) $test = "TRUE";
+
+		prepareAndExecuteStmt("debugging.showwarnings", $test, $dbPDO);
 
 		$test = "FALSE";
+		if (isset($_POST["chkDemo"])) $test = "TRUE";
 
-		if (isset($_POST["chkSMTP"])) {
-			$test = "TRUE";
+		prepareAndExecuteStmt("debugging.demo", $test, $dbPDO);
+
+		/* ------------- */
+
+		/* Verzekeringen */
+		if (issetAndNotEmpty($_POST["txtV1"])) prepareAndExecuteStmt("verzekeringen.1", $_POST["txtV1"], $dbPDO);
+		if (issetAndNotEmpty($_POST["txtV2"])) prepareAndExecuteStmt("verzekeringen.2", $_POST["txtV2"], $dbPDO);
+
+		/* ------------- */
+
+		/* Tijdzone en lokatie */
+		prepareAndExecuteStmt("date.timezone", $_POST["lstTimezone"], $dbPDO);
+
+		if (isset($_POST["txtLokatie"])) {
+			$coord = addressToCoordinates($_POST["txtLokatie"]);
+
+			prepareAndExecuteStmt("geo.latitude", $coord["latitude"], $dbPDO);
+			prepareAndExecuteStmt("geo.longitude", $coord["longitude"], $dbPDO);
 		}
+
+		/* ------------- */
+
+		/* Credits */
+		if (issetAndNotEmpty($_POST["txtStart"])) prepareAndExecuteStmt("startvalues.credits", $_POST["txtStart"], $dbPDO);
+		if (issetAndNotEmpty($_POST["txtMin"])) prepareAndExecuteStmt("credits.min", $_POST["txtMin"], $dbPDO);
+		if (issetAndNotEmpty($_POST["txtMax"])) prepareAndExecuteStmt("credits.max", $_POST["txtMax"], $dbPDO);
+		if (issetAndNotEmpty($_POST["txtEenheid"])) prepareAndExecuteStmt("credits.name.1", $_POST["txtEenheid"], $dbPDO);
+		if (issetAndNotEmpty($_POST["txtMeervoud"])) prepareAndExecuteStmt("credits.name.x", $_POST["txtMeervoud"], $dbPDO);
+		if (issetAndNotEmpty($_POST["txtOverdracht"])) prepareAndExecuteStmt("credits.name.overdracht", $_POST["txtOverdracht"], $dbPDO);
+
+		/* ------------- */
+
+		/* Mail */
+		$test = "FALSE";
+		if (isset($_POST["chkSMTP"])) $test = "TRUE";
 
 		prepareAndExecuteStmt("mail.smtp", $test, $dbPDO);
 
 		if (isset($_POST["txtHost"])) prepareAndExecuteStmt("mail.Host", $_POST["txtHost"], $dbPDO);
 		
 		$test = "FALSE";
-
-		if (isset($_POST["chkAuth"])) {
-			$test = "TRUE";
-		}
+		if (isset($_POST["chkAuth"])) $test = "TRUE";
 
 		prepareAndExecuteStmt("mail.SMTPAuth", $test, $dbPDO);
 
@@ -124,6 +161,8 @@
 
 		prepareAndExecuteStmt("mail.Password", $pwd, $dbPDO);
 
+		/* ------------- */
+
 		redirect(filename());
 	}
 ?>
@@ -144,30 +183,43 @@
 					<h1>Configuratie paneel</h1>
 					<form id="frmConfig" method="POST">
 						<fieldset>
-							<legend>Start waardes</legend>
+							<legend>Start waarden</legend>
 							<p>
-								<label for="txtCredits">Credits:</label><br/>
-								<input type="number" name="txtCredits" id="txtCredits" value="<? echo settings("startvalues", "credits"); ?>"/>
+								<label for="txtTemplateFolder">Template folder:</label><br/>
+								<input type="text" name="txtTemplateFolder" id="txtTemplateFolder" value="<? echo settings("domain", "templatefolder"); ?>"/>
 							</p>
 							<p>
-								<label for="txtPhysical">Physical:</label><br/>
-								<input type="number" name="txtPhysical" id="txtPhysical" value="<? echo settings("startvalues", "physical"); ?>"/>
+								<label for="chkAlgemenevoorwaarden">Algemene voorwaarden</label>
+								<input type="checkbox" name="chkAlgemenevoorwaarden" id="chkAlgemenevoorwaarden" value="algemenevoorwaarden" <? print((settings("startvalues", "algemenevoorwaarden") == "TRUE") ? "checked='checked'" : ""); ?>/>
 							</p>
 							<p>
-								<label for="txtSocial">Social:</label><br/>
-								<input type="number" name="txtSocial" id="txtSocial" value="<? echo settings("startvalues", "social"); ?>"/>
-							</p>
-							<p>
-								<label for="txtMental">Mental:</label><br/>
-								<input type="number" name="txtMental" id="txtMental" value="<? echo settings("startvalues", "mental"); ?>"/>
-							</p>
-							<p>
-								<label for="txtEmotional">Emotional:</label><br/>
-								<input type="number" name="txtEmotional" id="txtEmotional" value="<? echo settings("startvalues", "emotional"); ?>"/>
-							</p>
-							<p>
-								<label for="chkVisibility">Visibility</label>
+								<label for="chkVisibility">Profielen zichtbaar</label>
 								<input type="checkbox" name="chkVisibility" id="chkVisibility" value="visibility" <?  print((settings("startvalues", "visibility") == "TRUE") ? "checked='checked'" : ""); ?>/>
+							</p>
+							<p>
+								<label for="txtAnalytics">Google analytics:</label><br/>
+								<input type="text" name="txtAnalytics" id="txtAnalytics" value="<? echo settings("analytics"); ?>"/>
+							</p>
+						</fieldset>
+						<fieldset>
+							<legend>Debugging</legend>
+							<p>
+								<label for="chkShowwarnings">Show warnings</label>
+								<input type="checkbox" name="chkShowwarnings" id="chkShowwarnings" value="showwarnings" <? print((settings("debugging", "showwarnings") == "TRUE") ? "checked='checked'" : ""); ?>/>
+							</p>
+							<p>
+								<label for="chkDemo">Demo</label>
+								<input type="checkbox" name="chkDemo" id="chkDemo" value="demo" <? print((settings("debugging", "demo") == "TRUE") ? "checked='checked'" : ""); ?>/>
+							</p>
+						</fieldset>
+						<!-- Later -->
+						<fieldset>
+							<legend>Verzekeringen</legend>
+							<p>
+								<input style="width: 250px;" type="text" name="txtV1" id="txtV1" value="<? echo settings("verzekeringen", "1"); ?>"/>
+							</p>
+							<p>
+								<input style="width: 250px;" type="text" name="txtV2" id="txtV2" value="<? echo settings("verzekeringen", "2"); ?>"/>
 							</p>
 						</fieldset>
 						<fieldset>
@@ -194,12 +246,20 @@
 								</select>
 							</p>
 							<p>
-								<label for="txtLokatie">Lokatie:</label><br/>
+								<label for="txtLokatie">Standaard lokatie:</label><br/>
 								<input type="text" name="txtLokatie" id="txtLokatie" value="<? echo coordinatesToAddress(settings("geo", "latitude"), settings("geo", "longitude")); ?>"/>
 							</p>
 						</fieldset>
 						<fieldset>
 							<legend>Credits</legend>
+							<p>
+								<label for="txtStart">Start:</label></br>
+								<input type="number" name="txtStart" id="txtStart" value="<? echo settings("startvalues", "credits"); ?>"/>
+							</p>
+							<p>
+								<label for="txtMin">Min:</label><br/>
+								<input type="number" name="txtMin" id="txtMin" value="<? echo settings("credits", "min"); ?>"/>
+							</p>
 							<p>
 								<label for="txtMax">Max:</label><br/>
 								<input type="number" name="txtMax" id="txtMax" value="<? echo settings("credits", "max"); ?>"/>
