@@ -163,6 +163,12 @@
 
 		/* ------------- */
 
+		/* Facebook loginapp */
+		if (isset($_POST["txtFbId"])) prepareAndExecuteStmt("facebook.loginapp.id", $_POST["txtFbId"], $dbPDO);
+		if (isset($_POST["txtFbSecret"])) prepareAndExecuteStmt("facebook.loginapp.secret", $_POST["txtFbSecret"], $dbPDO);
+
+		/* ------------- */
+
 		redirect(filename());
 	}
 ?>
@@ -306,6 +312,17 @@
 							<p>
 								<label for="txtPasswd">Password:</label><br/>
 								<input type="password" name="txtPasswd" id="txtPasswd" value="<? echo settings("mail", "Password"); ?>"/>
+							</p>
+						</fieldset>
+						<fieldset>
+							<legend>Facebook loginapp</legend>
+							<p>
+								<label for="txtFbId">Id:</label><br/>
+								<input type="text" name="txtFbId" id="txtFbId" value="<? echo settings("facebook", "loginapp", "id"); ?>"/>
+							</p>
+							<p>
+								<label for="txtFbSecret">Secret:</label><br/>
+								<input type="text" name="txtFbSecret" id="txtFbSecret" value="<? echo settings("facebook", "loginapp", "secret"); ?>"/>
 							</p>
 						</fieldset>
 						<input type="submit" name="btnOpslaan" value="Opslaan" class="btn btn-default btn-save"/>

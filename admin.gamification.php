@@ -23,32 +23,53 @@
 		$dt[0] = $t[1];
 		$dt[5] = substr($dt[5], 0, 5);
 
-		$date = date("d/m/Y", mktime(intval($dt[0]), intval($dt[1]), intval($dt[2]), intval($dt[3]), intval($dt[4]), intval($dt[5])));
+		$day = intval($dt[4]);
+		$month = intval($dt[3]);
+		$year = intval($dt[5]);
 
-		$time = date("H:m:s", mktime(intval($dt[0]), intval($dt[1]), intval($dt[2]), intval($dt[3]), intval($dt[4]), intval($dt[5])));
+		$hour = intval($dt[0]);
+		$minute = intval($dt[1]);
 
 		$dateTime = array(
-			"date" => $date,
-			"time" => $time
+			"date" => array(
+				"day" => $day,
+				"month" => $month,
+				"year" => $year
+			),
+			"time" => array(
+				"hour" => $hour,
+				"minute" => $minute,
+				"second" => 0
+			)
 		);
 
 		return $dateTime;
 	}
 
 	function makeTime($dt) {
-		$date = explode("/", $dt);
-		$day = intval($date[0]);
-		$month = intval($date[1]);
-		$year = intval(substr($date[2], 0, 4));
+		$date = $dt["date"];
+		$time = $dt["time"];
 
-		$time = explode(":", $date[2]);
-		$hour = intval(substr($time[0], 5, strlen($time[0]) - 4));
-		$minute = intval($time[1]);
-		$second = intval($time[2]);
-
-		$mkTime = "mktime(" . $hour . "," . $minute . "," . $second . "," . $month . "," . $day . "," . $year .  ")";
+		$mkTime = "mktime(" . $time["hour"] . "," . $time["minute"] . "," . $time["second"] . "," . $date["month"] . "," . $date["day"] . "," . $date["year"] .  ")";
 
 		return $mkTime;
+	}
+
+	function getPeriod($fomula) {
+		$digits = explode("*", $formula);
+
+		$test = false;
+
+		switch (intval($digits[1])) {
+			case 24:
+				$test = true;
+				break;
+			case 168:
+				$test = false;
+				break;
+		}
+
+		return $test;
 	}
 
 	if (isset($_POST["btnOpslaan"])) {
@@ -92,7 +113,15 @@
 		/* ------------- */
 
 		/* Crons */
-		if (isset($_POST["txtCronsIndicators"])) prepareAndExecuteStmt("crons.indicators", $_POST["txtCronsIndicators"], $dbPDO);
+		if (isset($_POST["rbWhen"]) && isset($_POST["txtCronsIndicators"])) {
+			$period = $_POST["rbWhen"];
+			$formula = $_POST["txtCronsIndicators"] . "*24*3600";
+
+			if ($period == "week") $formula = $_POST["txtCronsIndicators"] . "*168*3600";
+
+			prepareAndExecuteStmt("crons.indicators", $formula, $dbPDO);
+		}
+
 		if (isset($_POST["txtHTWFD"])) prepareAndExecuteStmt("crons.hourstoworkfordelay", $_POST["txtHTWFD"], $dbPDO);
 		if (isset($_POST["txtX"])) prepareAndExecuteStmt("crons.x", $_POST["txtX"], $dbPDO);
 
@@ -100,7 +129,22 @@
 
 		/* Datum */
 		if (isset($_POST["txtDateSpeed"])) prepareAndExecuteStmt("date.speed", $_POST["txtDateSpeed"], $dbPDO);
-		if (isset($_POST["dtStart"])) prepareAndExecuteStmt("date.start", makeTime($_POST["dtStart"]), $dbPDO);
+		if (isset($_POST["dDStart"]) && isset($_POST["dMStart"]) && isset($_POST["dYStart"]) && isset($_POST["tHStart"]) && isset($_POST["tMStart"])) {
+			$dateTime = array(
+				"date" => array(
+					"day" => $_POST["dDStart"],
+					"month" => $_POST["dMStart"],
+					"year" => $_POST["dYStart"]
+				),
+				"time" => array(
+					"hour" => $_POST["tHStart"],
+					"minute" => $_POST["tMStart"],
+					"second" => 0
+				)
+			);
+
+			prepareAndExecuteStmt("date.start", makeTime($dateTime), $dbPDO);
+		}
 
 		/* ------------- */
 
@@ -156,11 +200,11 @@
 									?>
 									<h2>Level <? echo $i; ?></h2>
 									<p>
-										<label for="txtLevel<? print($i . "Threshold"); ?>">Threshold</label><br/>
+										<label for="txtLevel<? print($i . "Threshold"); ?>">Threshold:</label><br/>
 										<input style="width: 75px;" type="number" name="txtLevel<?  print($i . "Threshold"); ?>" id="txtLevel<?  print($i . "Threshold"); ?>" value="<? echo $level["threshold"]; ?>"/>
 									</p>
 									<p>
-										<label for="txtLevel<? print($i . "Multiplier"); ?>">Vermenigvuldigingsfactor</label><br/>
+										<label for="txtLevel<? print($i . "Multiplier"); ?>">Vermenigvuldigingsfactor:</label><br/>
 										<input style="width: 75px;" type="number" name="txtLevel<?  print($i . "Multiplier"); ?>" id="txtLevel<?  print($i . "Multiplier"); ?>" value="<? echo $level["multiplier"]; ?>"/>
 									</p>
 									<?
@@ -177,39 +221,39 @@
 									?>
 									<h2>Warning <? echo $i; ?></h2>
 									<p>
-										<label for="txtW<? print($i . "Schenkingen"); ?>">Schenkingen</label><br/>
+										<label for="txtW<? print($i . "Schenkingen"); ?>">Schenkingen:</label><br/>
 										<input style="width: 75px;" type="number" name="txtW<? print($i . "Schenkingen"); ?>" id="txtW<? print($i . "Schenkingen"); ?>" value="<? echo $warning["schenkingen"]; ?>"/>
 									</p>
 									<p>
-										<label for="txtW<? print($i . "Trans"); ?>">Transactiediversiteit</label><br/>
+										<label for="txtW<? print($i . "Trans"); ?>">Transactiediversiteit:</label><br/>
 										<input style="width: 75px;" type="number" name="txtW<? print($i . "Trans"); ?>" id="txtW<? print($i . "Trans"); ?>" value="<? echo $warning["transactiediversiteit"]; ?>"/>
 									</p>
 									<p>
-										<label for="txtW<? print($i . "Credits"); ?>">Credits</label><br/>
+										<label for="txtW<? print($i . "Credits"); ?>">Credits:</label><br/>
 										<input style="width: 75px;" type="number" name="txtW<? print($i . "Credits"); ?>" id="txtW<? print($i . "Credits"); ?>" value="<? echo $warning["credits"]; ?>"/>
 									</p>
 									<p>
-										<label for="txtW<? print($i . "Waardering"); ?>">Waardering</label><br/>
+										<label for="txtW<? print($i . "Waardering"); ?>">Waardering:</label><br/>
 										<input style="width: 75px;" type="number" name="txtW<? print($i . "Waardering"); ?>" id="txtW<? print($i . "Waardering"); ?>" value="<? echo $warning["waardering"]; ?>"/>
 									</p>
 									<p>
-										<label for="txtW<? print($i . "Physical"); ?>">Physical</label><br/>
+										<label for="txtW<? print($i . "Physical"); ?>">Physical:</label><br/>
 										<input style="width: 75px;" type="number" name="txtW<? print($i . "Physical"); ?>" id="txtW<? print($i . "Physical"); ?>" value="<? echo $warning["physical"]; ?>"/>
 									</p>
 									<p>
-										<label for="txtW<? print($i . "Social"); ?>">Social</label><br/>
+										<label for="txtW<? print($i . "Social"); ?>">Social:</label><br/>
 										<input style="width: 75px;" type="number" name="txtW<? print($i . "Social"); ?>" id="txtW<? print($i . "Social"); ?>" value="<? echo $warning["social"]; ?>"/>
 									</p>
 									<p>
-										<label for="txtW<? print($i . "Mental"); ?>">Mental</label><br/>
+										<label for="txtW<? print($i . "Mental"); ?>">Mental:</label><br/>
 										<input style="width: 75px;" type="number" name="txtW<? print($i . "Mental"); ?>" id="txtW<? print($i . "Mental"); ?>" value="<? echo $warning["mental"]; ?>"/>
 									</p>
 									<p>
-										<label for="txtW<? print($i . "Emotional"); ?>">Emotional</label><br/>
+										<label for="txtW<? print($i . "Emotional"); ?>">Emotional:</label><br/>
 										<input style="width: 75px;" type="number" name="txtW<? print($i . "Emotional"); ?>" id="txtW<? print($i . "Emotional"); ?>" value="<? echo $warning["emotional"]; ?>"/>
 									</p>
 									<p>
-										<label for="txtW<? print($i . "IndiSom"); ?>">Indicatorsom</label><br/>
+										<label for="txtW<? print($i . "IndiSom"); ?>">Indicatorsom:</label><br/>
 										<input style="width: 75px;" type="number" name="txtW<? print($i . "IndiSom"); ?>" id="txtW<? print($i . "IndiSom"); ?>" value="<? echo $warning["indicatorsom"]; ?>"/>
 									</p>
 									<?
@@ -221,7 +265,9 @@
 							<legend>Taken planner</legend>
 							<p>
 								<label for="txtCronsIndicators">Indicatoren verlagen:</label><br/>
-								<input type="text" name="txtCronsIndicators" id="txtCronsIndicators" value="<? echo settings("crons", "indicators"); ?>"/>
+								<input type="radio" name="rbWhen" value="day" checked="<? echo getPeriod(settings("crons", "indicators")); ?>"/>Dag&nbsp;&nbsp;|&nbsp;&nbsp;
+								<input type="radio" name="rbWhen" value="week" checked="<? echo getPeriod(settings("crons", "indicators")); ?>"/>Week<br/>
+								<input type="number" name="txtCronsIndicators" id="txtCronsIndicators" min="0" value="<? echo settings("crons", "indicators"); ?>"/>
 							</p>
 							<p>
 								<label for="txtHTWFD">Aantal uren werken voor delay:</label><br/>
@@ -239,9 +285,12 @@
 								<input type="number" name="txtDateSpeed" id="txtDateSpeed" value="<? echo settings("date", "speed"); ?>"/>
 							</p>
 							<p>
-								<label for="dStart">Start:</label><br/>
-								<input type="date" name="dStart" id="dStart" value="<? echo createDateTime(settings("date", "start"))["date"]; ?>"/>
-								<input type="time" name="tStart" id="tStart" value="<? echo createDateTime(settings("date", "start"))["time"]; ?>"/>
+								<label for="dDStart">Start:</label><br/>
+								<input type="number" name="dDStart" id="dDStart" min="0" max="31" value="<? echo createDateTime(settings("date", "start"))["date"]["day"]; ?>"/>/
+								<input type="number" name="dMStart" id="dMStart" min="0" max="12" value="<? echo createDateTime(settings("date", "start"))["date"]["month"]; ?>"/>/
+								<input type="number" name="dYStart" id="dYStart" min="2014" value="<? echo createDateTime(settings("date", "start"))["date"]["year"]; ?>"/>&nbsp;&nbsp;&nbsp;
+								<input type="number" name="tHStart" id="tHStart" min="1" max="24" value="<? echo createDateTime(settings("date", "start"))["time"]["hour"]; ?>"/>:
+								<input type="number" name="tMStart" id="tMStart" min="0" max="59" value="<? echo createDateTime(settings("date", "start"))["time"]["minute"]; ?>"/>
 							</p>
 						</fieldset>
 						<fieldset>
