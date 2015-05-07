@@ -222,10 +222,10 @@
 						<fieldset>
 							<legend>Verzekeringen</legend>
 							<p>
-								<input style="width: 250px;" type="text" name="txtV1" id="txtV1" value="<? echo settings("verzekeringen", "1"); ?>"/>
+								<input style="width: 350px;" type="text" name="txtV1" id="txtV1" value="<? echo settings("verzekeringen", "1"); ?>"/>
 							</p>
 							<p>
-								<input style="width: 250px;" type="text" name="txtV2" id="txtV2" value="<? echo settings("verzekeringen", "2"); ?>"/>
+								<input style="width: 350px;" type="text" name="txtV2" id="txtV2" value="<? echo settings("verzekeringen", "2"); ?>"/>
 							</p>
 						</fieldset>
 						<fieldset>

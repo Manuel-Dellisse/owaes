@@ -169,6 +169,7 @@
 					<? echo $oSecurity->me()->html("user.html"); ?>
 				</div>
 				<div class="main market admin">
+					<? include "admin.menu.xml"; ?>
 					<h1>Spel configuraties</h1>
 					<form id="frmGameConfig" method="POST">
 						<fieldset>
