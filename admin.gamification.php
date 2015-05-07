@@ -55,21 +55,20 @@
 		return $mkTime;
 	}
 
-	function getPeriod($fomula) {
+	function getPeriod($formula, $from) {
 		$digits = explode("*", $formula);
 
-		$test = false;
+		$test = "";
 
-		switch (intval($digits[1])) {
-			case 24:
-				$test = true;
-				break;
-			case 168:
-				$test = false;
-				break;
-		}
+		if ($from == "day" && $digits[1] == "24") $test = "checked='checked'";
+		if ($from == "week" && $digits[1] == "168") $test = "checked='checked'";
 
 		return $test;
+	}
+
+	function getCronsIndicator($formula) {
+		$digits = explode("*", $formula);
+		return $digits[0];
 	}
 
 	if (isset($_POST["btnOpslaan"])) {
@@ -265,9 +264,9 @@
 							<legend>Taken planner</legend>
 							<p>
 								<label for="txtCronsIndicators">Indicatoren verlagen:</label><br/>
-								<input type="radio" name="rbWhen" value="day" checked="<? echo getPeriod(settings("crons", "indicators")); ?>"/>Dag&nbsp;&nbsp;|&nbsp;&nbsp;
-								<input type="radio" name="rbWhen" value="week" checked="<? echo getPeriod(settings("crons", "indicators")); ?>"/>Week<br/>
-								<input type="number" name="txtCronsIndicators" id="txtCronsIndicators" min="0" value="<? echo settings("crons", "indicators"); ?>"/>
+								<input type="radio" name="rbWhen" value="day" <? echo getPeriod(settings("crons", "indicators"), "day"); ?>/>Dag&nbsp;&nbsp;&nbsp;&nbsp;
+								<input type="radio" name="rbWhen" value="week" <? echo getPeriod(settings("crons", "indicators"), "week"); ?>/>Week<br/>
+								<input type="number" name="txtCronsIndicators" id="txtCronsIndicators" min="0" value="<? echo getCronsIndicator(settings("crons", "indicators")); ?>"/>
 							</p>
 							<p>
 								<label for="txtHTWFD">Aantal uren werken voor delay:</label><br/>
