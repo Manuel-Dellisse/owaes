@@ -160,6 +160,13 @@
 <html>
 	<head>
 		<? echo $oPage->getHeader(); ?>
+		<style>
+			input[type="range"] {
+				width: 500px;
+				height: 10px;
+				-webkit-appearance: none;
+			}
+		</style>
 	</head>
 	<body id="index">
 		<? echo $oPage->startTabs(); ?>
@@ -175,20 +182,20 @@
 						<fieldset>
 							<legend>Start waarden</legend>
 							<p>
-								<label for="txtPhysical">Physical:</label><br/>
-								<input type="number" name="txtPhysical" id="txtPhysical" value="<? echo settings("startvalues", "physical"); ?>"/>
+								<label for="txtPhysical">Physical:</label>&nbsp;&nbsp;<span id="sPhy"></span>
+								<input step="1" onchange="printValue('txtPhysical', 'sPhy')" style="background-color: #ff3131;" type="range" name="txtPhysical" id="txtPhysical" min="0" max="100" value="<? echo settings("startvalues", "physical"); ?>"/>
 							</p>
 							<p>
-								<label for="txtSocial">Social:</label><br/>
-								<input type="number" name="txtSocial" id="txtSocial" value="<? echo settings("startvalues", "social"); ?>"/>
+								<label for="txtSocial">Social:</label>&nbsp;&nbsp;<span id="sSoc"></span>
+								<input step="1" onchange="printValue('txtSocial', 'sSoc')" style="background-color: #8dc63f;" type="range" name="txtSocial" id="txtSocial" min="0" max="100" value="<? echo settings("startvalues", "social"); ?>"/>
 							</p>
 							<p>
-								<label for="txtMental">Mental:</label><br/>
-								<input type="number" name="txtMental" id="txtMental" value="<? echo settings("startvalues", "mental"); ?>"/>
+								<label for="txtMental">Mental:</label>&nbsp;&nbsp;<span id="sMen"></span>
+								<input step="1" onchange="printValue('txtMental', 'sMen')" style="background-color: #0072bc;" type="range" name="txtMental" id="txtMental" min="0" max="100" value="<? echo settings("startvalues", "mental"); ?>"/>
 							</p>
 							<p>
-								<label for="txtEmotional">Emotional:</label><br/>
-								<input type="number" name="txtEmotional" id="txtEmotional" value="<? echo settings("startvalues", "emotional"); ?>"/>
+								<label for="txtEmotional">Emotional:</label>&nbsp;&nbsp;<span id="sEmo"></span>
+								<input step="1" onchange="printValue('txtEmotional', 'sEmo')" style="background-color: #ffcc00;" type="range" name="txtEmotional" id="txtEmotional" min="0" max="100" value="<? echo settings("startvalues", "emotional"); ?>"/>
 							</p>
 						</fieldset>
 						<fieldset>
@@ -313,5 +320,20 @@
 		<div class="footer">
 			<? echo $oPage->footer(); ?>
 		</div>
+	<script>
+		function printValue(sliderID, spanID) {
+			var span = document.getElementById(spanID);
+			var sliderID = document.getElementById(sliderID);
+
+			span.innerText = sliderID.value;
+		}
+
+		window.addEventListener("DOMContentLoaded", function() {
+			printValue("txtPhysical", "sPhy");
+			printValue("txtSocial", "sSoc");
+			printValue("txtMental", "sMen");
+			printValue("txtEmotional", "sEmo");
+		});
+	</script>
 	</body>
 </html>
