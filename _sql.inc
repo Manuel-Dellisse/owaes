@@ -98,7 +98,16 @@
 		INSERT INTO `tblConfig` (`key`, `value`) VALUES
 	('facebook.loginapp.id', NULL), ('facebook.loginapp.secret', NULL);
 	</sql>
-	<sql name="update-cronsIndicators_tblConfig" tag="3">
-		UPDATE `tblConfig` SET `value` = '1*24*3600' WHERE `key` LIKE 'crons.indicators';
+	<sql name="update-status-inschrijvingen-stap1" tag="3">
+		CREATE TABLE tmpToUpdate AS (select s.id from tblMarketSubscriptions s inner join tblPayments p on s.market = p.market and p.actief = 1 and (s.user = p.receiver or s.user = p.sender) and s.overruled = 0 and s.status = 2);
+	</sql>
+	<sql name="update-status-inschrijvingen-stap2" tag="4">
+		update tblMarketSubscriptions set status = 5 where id in (select id from tmpToUpdate); 
+	</sql>
+	<sql name="update-status-inschrijvingen-stap3" tag="5">
+		DROP TABLE tmpToUpdate;
+	</sql>
+	<sql name="update-cronsIndicators_tblConfig" tag="6">
+		UPDATE `tblConfig` SET `value` = '1*24*3600' WHERE `key` LIKE `crons.indicators';
 	</sql>
 </queries>
