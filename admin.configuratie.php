@@ -260,15 +260,15 @@
 							<legend>Credits</legend>
 							<p>
 								<label for="txtStart">Start:</label></br>
-								<input type="number" name="txtStart" id="txtStart" value="<? echo settings("startvalues", "credits"); ?>"/>
+								<input type="number" name="txtStart" id="txtStart" min="0" value="<? echo settings("startvalues", "credits"); ?>"/>
 							</p>
 							<p>
 								<label for="txtMin">Min:</label><br/>
-								<input type="number" name="txtMin" id="txtMin" value="<? echo settings("credits", "min"); ?>"/>
+								<input type="number" name="txtMin" id="txtMin" min="0" value="<? echo settings("credits", "min"); ?>"/>
 							</p>
 							<p>
 								<label for="txtMax">Max:</label><br/>
-								<input type="number" name="txtMax" id="txtMax" value="<? echo settings("credits", "max"); ?>"/>
+								<input type="number" name="txtMax" id="txtMax" min="0" value="<? echo settings("credits", "max"); ?>"/>
 							</p>
 							<p>
 								<label for="txtEenheid">Eenheid:</label><br/>
@@ -303,7 +303,7 @@
 							</p>
 							<p>
 								<label for="txtPort">Port:</label><br/>
-								<input type="number" name="txtPort" id="txtPort" value="<? echo settings("mail", "Port"); ?>"/>
+								<input type="number" name="txtPort" id="txtPort" min="0" max="65535" value="<? echo settings("mail", "Port"); ?>"/>
 							</p>
 							<p>
 								<label for="txtUsername">Username:</label><br/>

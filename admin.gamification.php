@@ -282,7 +282,7 @@
 							</p>
 							<p>
 								<label for="txtX">x</label><br/>
-								<input type="text" name="txtX" id="txtX" value="<? echo settings("crons", "x"); ?>"/>
+								<input type="number" name="txtX" id="txtX" value="<? echo settings("crons", "x"); ?>"/>
 							</p>
 						</fieldset>
 						<fieldset>
