@@ -298,8 +298,8 @@
 							</p>
 							<p>
 								<label for="dDStart">Start:</label><br/>
-								<input type="number" name="dDStart" id="dDStart" min="0" max="31" value="<? echo createDateTime(settings("date", "start"))["date"]["day"]; ?>"/>/
-								<input type="number" name="dMStart" id="dMStart" min="0" max="12" value="<? echo createDateTime(settings("date", "start"))["date"]["month"]; ?>"/>/
+								<input type="number" name="dDStart" id="dDStart" min="1" max="31" value="<? echo createDateTime(settings("date", "start"))["date"]["day"]; ?>"/>/
+								<input type="number" name="dMStart" id="dMStart" min="1" max="12" value="<? echo createDateTime(settings("date", "start"))["date"]["month"]; ?>"/>/
 								<input type="number" name="dYStart" id="dYStart" min="2014" value="<? echo createDateTime(settings("date", "start"))["date"]["year"]; ?>"/>&nbsp;&nbsp;&nbsp;
 								<input type="number" name="tHStart" id="tHStart" min="1" max="24" value="<? echo createDateTime(settings("date", "start"))["time"]["hour"]; ?>"/>:
 								<input type="number" name="tMStart" id="tMStart" min="0" max="59" value="<? echo createDateTime(settings("date", "start"))["time"]["minute"]; ?>"/>
