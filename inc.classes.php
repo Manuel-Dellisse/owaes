@@ -1,4 +1,4 @@
-<?
+<?php
 	require_once "class.owaes.item.php"; 
 	require_once "class.owaes.list.php";
 	require_once "class.page.php";
@@ -29,7 +29,7 @@
 	require_once "class.badge.php";   
 
 	require_once 'class.openid.php';
-	//require_once 'fb/facebook.php'; 
+	require_once 'fb/facebook.php'; 
 	
 	require_once 'class.notification.php';
 	require_once 'class.reports.php';

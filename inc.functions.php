@@ -32,11 +32,11 @@
 		return $strHTML; 
 	}
 	 
-	function owaesTime() {
+	function owaesTime() { 
 		$iSpeed = settings("date", "speed"); 
 		$iStart = settings("date", "start");
 		$iDiff = settings("date", "servertime");
-		
+		 
 		$iTime = ((time()-$iStart)*$iSpeed) + $iStart + $iDiff; 
 		return $iTime; 	
 	}
@@ -225,63 +225,38 @@
 	function javatime($iTime) {
 		return $iTime * 1000; 	
 	}
-
-	function arConfigLoaded() {
-		global $arConfig;
-		return (count($arConfig) > 0) ? TRUE : FALSE;
-	}
-
-	function loadSettings() {
-		if (!arConfigLoaded()) {
-			die("inc.config.php not found!");
-		}
-
-		global $arConfig;
-
-		// connectie met database
-		$dbCon = new PDO("mysql:host=" . $arConfig["database"]["host"] . ";dbname=" . $arConfig["database"]["name"], $arConfig["database"]["user"], $arConfig["database"]["password"]);
-
-		// haal data van tblConfig
-		$query = "SELECT `key`, `value` FROM `tblConfig`";
-		$result = $dbCon->query($query);
-
-		// maak een associatief array met de database waardes
-		if (!$result) {
-			die("Geen configuratie gevonden");
-		}
-
-		if ($result->rowCount() > 0) {
-			foreach ($result as $row) {
-				$keys = explode(".", $row["key"]);
-				$lenKeys = count($keys);
-
-				switch ($lenKeys) {
-					case 1:
-						$arConfig[$row["key"]] = $row["value"];
-						break;
-					case 2:
-						$arConfig[$keys[0]][$keys[1]] = $row["value"];
-						break;
-					case 3:
-						$arConfig[$keys[0]][$keys[1]][$keys[2]] = $row["value"];
-						break;
-				}
-			}
-		}
-
-		$domainRoot = "/owaes/";
-		$domainAbsRoot = "http://localhost/owaes/";
-
-		$arConfig["domain"]["name"] = strtolower($_SERVER['HTTP_HOST']);
-		$arConfig["domain"]["root"] = $domainRoot;
-		$arConfig["domain"]["absroot"] = $domainAbsRoot;
-	}
-	
+ 	
 	function settings($strA, $strB = NULL, $strC = NULL) {
 		global $arConfig; 
-		if (isset($strC)) return isset($arConfig[$strA][$strB][$strC]) ? $arConfig[$strA][$strB][$strC] : FALSE; 
-		if (isset($strB)) return isset($arConfig[$strA][$strB]) ? $arConfig[$strA][$strB] : FALSE; 
-		return isset($arConfig[$strA]) ? $arConfig[$strA] : FALSE; 
+		 
+		if (isset($strC)) {
+			if (isset($arConfig[$strA][$strB][$strC])) return $arConfig[$strA][$strB][$strC];
+		} else if (isset($strB)){
+			if (isset($arConfig[$strA][$strB])) return $arConfig[$strA][$strB]; 
+		} else if (isset($arConfig[$strA])) return $arConfig[$strA]; 
+		
+		if (!isset($arConfig["dbloaded"])) {
+			$oDB = new database("SELECT `key`, `value` FROM `tblConfig`");
+			$oDB->execute(); 
+			while ($oDB->nextRecord()) { 
+				$arKeys = explode(".", $oDB->get("key")); 
+				switch (count($arKeys)) {
+					case 1:
+						$arConfig[$arKeys[0]] = $oDB->get("value");
+						break;
+					case 2:
+						$arConfig[$arKeys[0]][$arKeys[1]] = $oDB->get("value");
+						break;
+					case 3:
+						$arConfig[$arKeys[0]][$arKeys[1]][$arKeys[2]] = $oDB->get("value");
+						break;
+				}
+			} 
+			
+			$arConfig["dbloaded"] = TRUE;  
+			return settings($strA, $strB, $strC); 
+		}
+		return FALSE; 
 	}
 	
 	
@@ -401,9 +376,9 @@
 		global $arConfig;  
 		if ((strrpos($strURL, "://") === false) && (substr($strURL, 0, 2)!="//")) {  // relatief pad 
 			if (substr($strURL, 0, 1) == "/"){ 
-				return ($bAbsolute ? $arConfig["domain"]["absroot"] : $arConfig["domain"]["root"]) . substr($strURL, 1); 
+				return ($bAbsolute ? settings("domain", "absroot") : settings("domain", "root")) . substr($strURL, 1); 
 			} else { 
-				return ($bAbsolute ? $arConfig["domain"]["absroot"] : $arConfig["domain"]["root"]) . $strURL; 
+				return ($bAbsolute ? settings("domain", "absroot") : settings("domain", "root")) . $strURL; 
 			}
 		} else { // absoluut pad
 			return $strURL;  
