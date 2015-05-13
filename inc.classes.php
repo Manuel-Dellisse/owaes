@@ -28,8 +28,9 @@
 	require_once "class.template.php";   
 	require_once "class.badge.php";   
 
-	require_once 'class.openid.php';
-	require_once 'fb/facebook.php'; 
+	// In comment for developing purposes!!!!!!!!!
+	//require_once 'class.openid.php';
+	//require_once 'fb/facebook.php'; 
 	
 	require_once 'class.notification.php';
 	require_once 'class.reports.php';
