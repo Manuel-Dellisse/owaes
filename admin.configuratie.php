@@ -8,6 +8,8 @@
 	$oPage->addJS("script/admin.js");
 	$oPage->addCSS("style/admin.css");
 
+	$oPage->addJS("script/confVal.js");
+
 	function addressToCoordinates($address) {
 		$url = "http://maps.google.com/maps/api/geocode/json?sensor=false&address=" . $address;
 		$response = file_get_contents($url);
@@ -70,7 +72,7 @@
 	}
 
 	if (isset($_POST["btnOpslaan"])) {
-		/* Start waarden */
+		/* Startwaarden */
 		if (issetAndNotEmpty($_POST["txtTemplateFolder"])) prepareAndExecuteStmt("domain.templatefolder", $_POST["txtTemplateFolder"], $dbPDO);
 
 		$test = "FALSE";
@@ -176,10 +178,27 @@
 <html>
 	<head>
 		<? echo $oPage->getHeader(); ?>
+		<style>
+			.fout, li.error {
+				background: #ff0039;
+			}
+
+			.fout {
+				color: white;
+			}
+
+			.enabled {
+				background: #ffffff;
+			}
+
+			.disabled {
+				background: #dadada;
+			}
+		</style>
 	</head>
 	<body id="index">
 		<? echo $oPage->startTabs(); ?>
-		<div class="body">
+		<div class="body content container">
 			<div class="container">
 				<div class="row">
 					<? echo $oSecurity->me()->html("user.html"); ?>
@@ -187,9 +206,10 @@
 				<div class="main market admin">
 					<? include "admin.menu.xml"; ?>
 					<h1>Configuratie paneel</h1>
-					<form id="frmConfig" method="POST">
+					<div class="errors"></div>
+					<form name="frmConfig" id="frmConfig" method="POST">
 						<fieldset>
-							<legend>Start waarden</legend>
+							<legend>Startwaarden</legend>
 							<p>
 								<label for="txtTemplateFolder">Template folder:</label><br/>
 								<input type="text" name="txtTemplateFolder" id="txtTemplateFolder" value="<? echo settings("domain", "templatefolder"); ?>"/>
@@ -218,7 +238,6 @@
 								<input type="checkbox" name="chkDemo" id="chkDemo" value="demo" <? print((settings("debugging", "demo") == "TRUE") ? "checked='checked'" : ""); ?>/>
 							</p>
 						</fieldset>
-						<!-- Later -->
 						<fieldset>
 							<legend>Verzekeringen</legend>
 							<p>
@@ -260,7 +279,7 @@
 							<legend>Credits</legend>
 							<p>
 								<label for="txtStart">Start:</label></br>
-								<input type="number" name="txtStart" id="txtStart" min="0" value="<? echo settings("startvalues", "credits"); ?>"/>
+								<input type="number" name="txtStart" id="txtStart" min="0" max="<? echo settings("credits", "max"); ?>"  value="<? echo settings("startvalues", "credits"); ?>"/>
 							</p>
 							<p>
 								<label for="txtMin">Min:</label><br/>
@@ -325,7 +344,7 @@
 								<input type="text" name="txtFbSecret" id="txtFbSecret" value="<? echo settings("facebook", "loginapp", "secret"); ?>"/>
 							</p>
 						</fieldset>
-						<input type="submit" name="btnOpslaan" value="Opslaan" class="btn btn-default btn-save"/>
+						<input type="submit" name="btnOpslaan" value="Opslaan" class="btn btn-default btn-save"/>	
 					</form>
 				</div>
 			</div>
@@ -340,10 +359,14 @@
 
 			for (var i = 0; i < lenFields; i++) {
 				if (!state) {
-					fields[i].style.background = "#dadada";
+					fields[i].className = "disabled";
 				}
 				else {
-					fields[i].style.background = "#ffffff";
+					fields[i].className = "enabled";
+
+					if (fields[i].classList.contains("fout")) {
+						fields[i].classList.remove("enabled");
+					}
 				}
 
 				if (fields[i].name == "chkAuth") {
@@ -355,21 +378,37 @@
 			}
 		}
 
-		var chkSMTP = document.getElementById("chkSMTP");
-		var txtHost = document.getElementById("txtHost");
-		var chkAuth = document.getElementById("chkAuth");
-		var txtSecure = document.getElementById("txtSecure");
-		var txtPort = document.getElementById("txtPort");
-		var txtUsername = document.getElementById("txtUsername");
-		var txtPasswd = document.getElementById("txtPasswd");
+		document.addEventListener("DOMContentLoaded", function() {
+			var chkSMTP = document.getElementById("chkSMTP");
+			var txtHost = document.getElementById("txtHost");
+			var chkAuth = document.getElementById("chkAuth");
+			var txtSecure = document.getElementById("txtSecure");
+			var txtPort = document.getElementById("txtPort");
+			var txtUsername = document.getElementById("txtUsername");
+			var txtPasswd = document.getElementById("txtPasswd");
 
-		var fields = [txtHost, chkAuth, txtSecure,
-			txtPort, txtUsername, txtPasswd];
+			enableDisableFields(chkSMTP.check,
+				[txtHost, chkAuth, txtSecure,
+				txtPort, txtUsername, txtPasswd]);
 
-		enableDisableFields(chkSMTP.checked, fields);
+			chkSMTP.addEventListener("click", function() {
+				enableDisableFields(chkSMTP.check,
+					[txtHost, chkAuth, txtSecure,
+					txtPort, txtUsername, txtPasswd]);
+			});
 
-		chkSMTP.addEventListener("click", function() {
-			enableDisableFields(chkSMTP.checked, fields);
+			chkAuth.addEventListener("click", function() {
+				enableDisableFields(chkAuth.check,
+					[txtSecure, txtPort, txtUsername,
+					txtPasswd]);
+			});
+
+			var txtStart = document.getElementById("txtStart");
+			var txtMax = document.getElementById("txtMax");
+
+			txtMax.addEventListener("blur", function() {
+				txtStart.max = txtMax.value;
+			});
 		});
 	</script>
 	</body>
