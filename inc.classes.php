@@ -28,12 +28,12 @@
 	require_once "class.template.php";   
 	require_once "class.badge.php";   
 
-	// In comment for developing purposes!!!!!!!!!
-	//require_once 'class.openid.php';
-	//require_once 'fb/facebook.php'; 
+	require_once 'class.openid.php';
+	require_once 'fb/facebook.php'; 
 	
 	require_once 'class.notification.php';
 	require_once 'class.reports.php';
+	require_once 'class.mailalert.php';
 	
 	//require_once 'htmlpurifier-4.6.0/library/HTMLPurifier.auto.php';
 

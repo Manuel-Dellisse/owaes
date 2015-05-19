@@ -1,4 +1,4 @@
-<?  
+<?php  
 	define ("STATE_RECRUTE", 0); 
 	define ("STATE_SELECTED", 1); 
 	define ("STATE_FINISHED", 2); 
@@ -441,6 +441,15 @@ $iTypes: STATE_RECRUTE / STATE_SELECTED / STATE_FINISHED / STATE_DELETED
 							$oNotification->sender($iUser); 
 							break; 
 					}
+					
+					if ($this->author()->mailalert("newsubscription")) {
+						$oAlert = new mailalert(); 
+						$oAlert->user($this->author()->id()); 
+						$oAlert->link("market", $this->id()); 
+						$oAlert->deadline($this->author()->mailalert("newsubscription")); 
+						$oAlert->update();  
+					}  
+					
 					$oNotification->key("subscription." .  $this->id()); 
 					$oNotification->link(fixPath($this->getLink())); 
 					$oNotification->send(); 
