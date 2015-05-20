@@ -269,7 +269,7 @@
 	</head>
 	<body id="index">
 		<? echo $oPage->startTabs(); ?>
-		<div class="body content container">
+		<div class="body content">
 			<div class="container">
 				<div class="row">
 					<? echo $oSecurity->me()->html("user.html"); ?>
