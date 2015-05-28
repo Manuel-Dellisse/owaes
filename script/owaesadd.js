@@ -382,8 +382,8 @@ function validateAddActivity(bShowAlerts) {
     var $tijdsduur = $(".content-market-add #timingfreeslide").val();
     var $credits = $(".content-market-add #creditsfield").val();
     var $inputTijdstippen = $(".tijdstippen input").val();
-    var strType = $("select#kiesowaestype").val();  
-	var strPerson = $("select#person").val();  
+    var strType = $("#kiesowaestype").val();  
+	var strPerson = $("#person").val();  
 	
 	if (arP[strType].indexOf(strPerson) < 0) arFouten["kiesowaestype"] = "Deze gebruiker kan geen opdracht van dit type aanmaken"; 
 	
@@ -404,8 +404,8 @@ function validateAddActivity(bShowAlerts) {
     if (!($credits > 0)) {
 		arFouten["creditsfield"] = "Gelieve meer dan 0 " + vocabulaire("credits") + " te geven/vragen."; 
 	}
-    if ($credits > 4800) {
-		arFouten["creditsfield"] = "Er geldt een maximum van 4800 " + vocabulaire("credits") + " per opdracht."; 
+    if ($credits > $(".content-market-add #creditsfield").attr("max")) {
+		arFouten["creditsfield"] = "Er geldt een maximum van " + $(".content-market-add #creditsfield").attr("max") + " " + vocabulaire("credits") + " per opdracht."; 
 	}
     if ($("input#voorwaarden:checked").length == 0) arFouten["voorwaarden"] = "Gelieve de gebruiksvoorwaarden aan te vinken.";   // Ik bevestig dat dit aanbod conform de gebruiksvoorwaarden is. 
 
