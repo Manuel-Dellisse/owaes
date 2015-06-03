@@ -2,7 +2,7 @@
 	include "inc.default.php"; // should be included in EVERY file 
 	$oSecurity = new security(TRUE); 
 	$oPage->addJS("https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true");
-
+ 
 	$oExperience = new experience(me());  
 	$oExperience->detail("reason", "pageload");     
 	$oExperience->add(1);  
@@ -32,7 +32,7 @@
 		$oProfile->telephone($_POST["telephone"]); 
 		$oProfile->visible("telephone", $_POST["showtelephone"]); 
 		$oProfile->birthdate(ddmmyyyyTOdate($_POST["birthdate"]));  
-		$oProfile->visible("birthdate", $_POST["showbirthdate"]); 
+		$oProfile->visible("birthdate", $_POST["showbirthdate"]);  
 		 
 		$bImageUploaded = FALSE; 
 		if ($_FILES["img"]["error"] == 0){  
