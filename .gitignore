@@ -2,6 +2,7 @@
 /_DB backup
 /_temp
 /.project
+/.idea
 /cache/*
 inc.config.db.php
 *.old
