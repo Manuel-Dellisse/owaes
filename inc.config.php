@@ -53,8 +53,6 @@
 				"threshold" => 25000, 
 				"multiplier" => 2, 
 			), 
-<<<<<<< HEAD
-=======
 			7 => array( 
 				"threshold" => 50000, 
 				"multiplier" => 2, 
@@ -71,7 +69,6 @@
 				"threshold" => 400000, 
 				"multiplier" => 2, 
 			), 
->>>>>>> upstream/0-work
 		), 
 		"warnings" => array( 
 			1 => array( 
