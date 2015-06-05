@@ -566,8 +566,11 @@ dl.userinfo {
     height: 68px;
     border: 2px solid @cSecundary;
     border-right: none;
+<<<<<<< HEAD
+=======
     background-color: #f9f9f9;
     box-shadow: none;
+>>>>>>> upstream/0-work
 
     .icon-credits:before {
         margin: 0 0 0 5px;

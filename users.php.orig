@@ -8,7 +8,10 @@
 	$oUserList = new userlist();   
 	if (!user(me())->admin()) $oUserList->filter("visible"); 
 	$oUserList->filter("algemenevoorwaarden", TRUE); 
+<<<<<<< HEAD
+=======
 	
+>>>>>>> upstream/0-work
     
 	$oExperience = new experience(me());  
 	$oExperience->detail("reason", "pageload");     

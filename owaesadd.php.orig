@@ -10,6 +10,11 @@
 	
 	$iID = isset($_GET["edit"])?intval($_GET["edit"]):0;
 	$oOwaesItem = owaesitem($iID);
+<<<<<<< HEAD
+	
+	$iMaxCredits = min(settings("startvalues", "credits"), $oMe->credits()); 
+=======
+>>>>>>> upstream/0-work
 	 
 	$arPossiblePosters = array();  
 	$arOwaesTypes = owaesType()->getAllTypes();
@@ -202,6 +207,10 @@
 				})
             });
 			
+<<<<<<< HEAD
+			
+=======
+>>>>>>> upstream/0-work
 			<?php
 				$arJsonPosters = array(); 
 				foreach ($arPossiblePosters as $strTypeKey=>$arList) {
@@ -278,15 +287,24 @@ div.existingfile a.delfileinput {display: inline; }
     	<div class="body content content-market content-market-add container">
         	
             	<div class="row">
+<<<<<<< HEAD
+					<?php /*echo $oSecurity->me()->html("leftuserprofile.html"); */
+                    echo $oSecurity->me()->html("user.html");
+=======
 					<?php 
 						echo $oSecurity->me()->html("user.html");
+>>>>>>> upstream/0-work
                     ?>
                 </div>
                 <div class="container sidecenterright"> 
                  
                 <div class="errors"></div>
                 
+<<<<<<< HEAD
+                <form method="post" class="form-horizontal" id="frmowaesadd" name="frmowaesadd">
+=======
                 <form method="post" class="form-horizontal" id="frmowaesadd" name="frmowaesadd" enctype="multipart/form-data">
+>>>>>>> upstream/0-work
                 	<?php  
 						$arOwaesTypes = owaesType()->getAllTypes();
 						
