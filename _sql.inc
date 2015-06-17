@@ -165,6 +165,7 @@ CREATE TABLE IF NOT EXISTS `tblMailalerts` (
 		ALTER TABLE `tblMarket` CHANGE `img` `files` TEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL ;
 		update tblMarket set files = '{}' where files = 'img'; 
 	</sql>  
-	
-
+	<sql name="credit-name" tag="15">
+		UPDATE `tblConfig` SET credits.name.x = "credit" WHERE key = credits.name.x;
+	</sql>
 </queries>
