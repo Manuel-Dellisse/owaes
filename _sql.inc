@@ -166,6 +166,6 @@ CREATE TABLE IF NOT EXISTS `tblMailalerts` (
 		update tblMarket set files = '{}' where files = 'img'; 
 	</sql>  
 	<sql name="credit-name" tag="15">
-		UPDATE `tblConfig` SET `value` = 'credits' WHERE `key` LIKE 'credits.name.x';
+		UPDATE `tblConfig` SET value = 'credits' WHERE key LIKE 'credits.name.x';
 	</sql>
 </queries>
